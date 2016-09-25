@@ -10,7 +10,7 @@ button, .round-btn, [class^=btn-] {
 .badge {
     position: fixed;
     bottom: -70px;
-    transition: bottom 0.5s;
+    transition: bottom 0.5s, background-color 0.5s;
     left: 25px;
     padding: 10px;
     background-color: darkorchid;
@@ -33,6 +33,7 @@ button, .round-btn, [class^=btn-] {
 
 .badge:hover {
     bottom: -10px;
+    background-color: #00a;
 }
 
 .badge > h2 {
