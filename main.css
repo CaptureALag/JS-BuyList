@@ -23,7 +23,7 @@ button, .round-btn, [class^=btn-] {
     .badge {
         bottom: -10px;
         background-color: white;
-        border: 5px solid #555;
+        border: 5px solid darkorchid;
         color: #555;
     }
     .badge > h2 {
