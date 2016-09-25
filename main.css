@@ -7,6 +7,76 @@ button, .round-btn, [class^=btn-] {
     -webkit-user-select: none;
 }
 
+.badge {
+    position: fixed;
+    bottom: -70px;
+    transition: bottom 0.5s;
+    left: 25px;
+    padding: 10px;
+    background-color: darkorchid;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px 10px 0px 0px;
+}
+
+@media print {
+    .badge {
+        bottom: -10px;
+        background-color: white;
+        border: 5px solid #555;
+        color: #555;
+    }
+    .badge > h2 {
+        display: none;
+    }
+}
+
+.badge:hover {
+    bottom: -10px;
+}
+
+.badge > h2 {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.badge > h4 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.badge > h3 {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 0px;
+    left: 100%;
+    pointer-events: none;
+    opacity: 0;
+    background-color: darkmagenta;
+    color: white;
+    transition: opacity 0.25s, top 0.5s;
+    z-index: 999;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+[data-tooltip]:hover:after {
+    display: block;
+    opacity: 1;
+    top: -100%;
+}
+
 .container {
     width: 1100px;
     margin: 100px auto;
@@ -124,6 +194,7 @@ button, .round-btn, [class^=btn-] {
 .main-block > .list > .list-item > .btns-center > .minus {
     background-color: rgba(255, 0, 0, 0.8);
     box-shadow: 1px 2px 2px darkred;
+    z-index: 999;
 }
 
 .main-block > .list > .list-item > .btns-center > .minus:hover {
