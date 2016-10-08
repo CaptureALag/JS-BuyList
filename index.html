@@ -101,6 +101,9 @@
 		}
 
 		function toggleEditNameMode(itemNode, editMode) {
+			if(itemIsBought(itemNode))
+				return;
+
 			var name = itemNode.find('.name')
 			var newNameInput = itemNode.find('.new-name')
 
@@ -139,6 +142,7 @@
 					opacity: 1
 				})
 
+				getRelatedBadge(itemNode).find('.item-count').html(newCount)
 			})
 		}
 
@@ -182,6 +186,10 @@
 			var boughtIndex = getRelatedBoughtBadgeIndex(itemNode)
 
 			return $($(".list.bought > .list-item")[boughtIndex])
+		}
+
+		function itemIsBought(itemNode) {
+			return itemNode.find('.btn-remove:visible').length == 0;
 		}
 
 
