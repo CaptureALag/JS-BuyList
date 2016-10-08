@@ -6,18 +6,152 @@
 
 
     <link rel="stylesheet" type="text/css" href="main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
+	<script>
+		
+
+		
+
+		function addItem() {
+			var nameField = $('.name-field')
+			var name = nameField.val()
+
+			if(!name) return; 
+
+			nameField.val('')
+			nameField[0].focus()
+
+			var newItem = generateNewItem(name);
+			newItem.css({
+				height: 0,
+				padding: "0 15px"
+			})
+
+			getItemList().append(newItem)
+
+			$(newItem).animate({
+				height: "28px", 
+				"padding": "15px"
+			}, 500)
+		}
+
+		function deleteItem(itemNode) {
+			$(itemNode).animate({
+				height: "toggle", 
+				"padding": "0 15px"
+			}, 500, function() {
+				itemNode.remove();	
+			})
+		}
+
+		function toggleBuyItem(itemNode) {
+			itemNode.animate({
+				opacity: 0
+			}, 400, function() {
+				
+				var btnBuy = itemNode.find('.btn-buy')
+				var minusPlus = itemNode.find('.minus,.plus')
+				var btnRemove = itemNode.find('.btn-remove')
+
+				if(btnBuy.html() == 'Куплено') {
+					btnBuy.html('Не куплено')
+					btnBuy.attr('data-tooltip', 'Не купляти')
+					minusPlus.css({
+						opacity: 0,
+						'pointer-events': 'none'
+					})
+					btnRemove.hide();
+				} else {
+					btnBuy.html('Куплено')	
+					btnBuy.attr('data-tooltip', 'Купити')
+					minusPlus.css({
+						opacity: 1,
+						'pointer-events': 'inherit'	
+					})
+					btnRemove.show()
+				}
+
+				btnBuy.blur()
+
+				itemNode.animate({
+					opacity: 1
+				}, 400)
+			})	
+		}
+
+		function toggleEditNameMode(itemNode, editMode) {
+		
+		}
+
+		function changeItemCount(delta) {
+			
+		}
+
+
+
+		function generateNewItem(name) {
+			var newItem = $('#list-item-example').clone();
+			newItem.find('.name').html(name);
+			newItem.show();
+			return newItem;
+		}
+
+		function getItemList() {
+			return $('.main-block > .list')
+		}
+
+
+
+		$(function() {
+			$('#btn-add-item').click(addItem)
+			$('.name-field').keypress(function(e) { 
+				if(e.keyCode == 13) {
+					addItem();
+				} 
+			})
+			$('.main-block').on('click', '.btn-remove', function() {
+				deleteItem($(this).closest('.list-item'))	
+			})
+			$('.main-block').on('click', '.btn-buy', function() {
+				toggleBuyItem($(this).closest('.list-item'))	
+			})
+			$('.main-block').on('click', '.name', function() {
+				toggleEditNameMode($(this).closest('.list-item'), true)	
+			})
+			$('.main-block').on('blur', '.new-name', function() {
+				toggleEditNameMode($(this).closest('.list-item'), false)	
+			})
+
+
+		})
+	</script>
 	<div class="container">
 		<div class="block main-block">
 			<div class="search-form">
-				<input type="text" placeholder="Назва товару">
-				<button type="button" data-tooltip="Додати товар">Додати</button>
+				<input type="text" class="name-field" placeholder="Назва товару">
+				<button id="btn-add-item" type="button" data-tooltip="Додати товар">Додати</button>
 			</div>
 		
 			<div class="list">
+				<div id="list-item-example" class="list-item" style="display:none">
+					<div class="name">Помідори</div>
+					<input type="text" class="new-name">
+					<div class="btns-center">
+						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
+						<div class="count">1</div>
+						<div class="round-btn plus" data-tooltip="Збільшити кількість">+</div>
+					</div>
+					<div class="btns-right">
+						<button class="btn-buy" data-tooltip="Купити">Куплено</button>
+						<button class="btn-remove" data-tooltip="Видалити">x</button>
+					</div>
+				</div>
+
 				<div class="list-item">
 					<div class="name">Помідори</div>
+					<input type="text" class="new-name">
 					<div class="btns-center">
 						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
 						<div class="count">1</div>
@@ -30,6 +164,7 @@
 				</div>
 				<div class="list-item">
 					<div class="name">Печиво</div>
+					<input type="text" class="new-name">
 					<div class="btns-center">
 						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
 						<div class="count">1</div>
@@ -42,6 +177,7 @@
 				</div>
 				<div class="list-item">
 					<div class="name">Сир</div>
+					<input type="text" class="new-name">
 					<div class="btns-center">
 						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
 						<div class="count">1</div>
