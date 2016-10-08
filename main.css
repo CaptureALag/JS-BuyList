@@ -177,6 +177,8 @@ button, .round-btn, [class^=btn-] {
 .main-block > .list > .list-item > .new-name {
     margin-right: auto;
     display: none;
+    border-radius: 5px;
+    max-width: 150px;
 }
 
 .main-block > .list > .list-item > .btns-center {
@@ -195,6 +197,11 @@ button, .round-btn, [class^=btn-] {
     opacity: 0.9;
     color: white;
     font-weight: bold;
+}
+
+.main-block > .list > .list-item > .btns-center > .round-btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 .main-block > .list > .list-item > .btns-center > .minus {

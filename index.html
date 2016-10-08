@@ -82,11 +82,35 @@
 		}
 
 		function toggleEditNameMode(itemNode, editMode) {
-		
+			var name = itemNode.find('.name')
+			var newNameInput = itemNode.find('.new-name')
+
+			name.toggle(!editMode)
+			newNameInput.toggle(editMode)
+
+			if(editMode) {
+				newNameInput.val(name.html())
+			} else {
+				name.html(newNameInput.val())
+			}
 		}
 
-		function changeItemCount(delta) {
-			
+		function changeItemCount(itemNode, delta) {
+			var countBlock = itemNode.find('.btns-center')
+			var minus = countBlock.find('.minus')
+			var count = countBlock.find('.count')
+			var currentCount = parseInt(count.html())
+			var newCount = currentCount + delta;
+
+			countBlock.animate({
+				opacity: 0
+			}, 200, function() {
+				count.html(newCount);
+				minus.toggleClass('disabled', newCount == 1);
+				countBlock.animate({
+					opacity: 1
+				})
+			})
 		}
 
 
@@ -123,7 +147,9 @@
 			$('.main-block').on('blur', '.new-name', function() {
 				toggleEditNameMode($(this).closest('.list-item'), false)	
 			})
-
+			$('.main-block').on('click', '.plus,.minus', function() {
+				changeItemCount($(this).closest('.list-item'), -1 + $(this).hasClass('plus')*2)
+			})
 
 		})
 	</script>
@@ -139,7 +165,7 @@
 					<div class="name">Помідори</div>
 					<input type="text" class="new-name">
 					<div class="btns-center">
-						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
+						<div class="round-btn minus disabled" data-tooltip="Зменшити кількість">-</div>
 						<div class="count">1</div>
 						<div class="round-btn plus" data-tooltip="Збільшити кількість">+</div>
 					</div>
@@ -153,7 +179,7 @@
 					<div class="name">Помідори</div>
 					<input type="text" class="new-name">
 					<div class="btns-center">
-						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
+						<div class="round-btn minus disabled" data-tooltip="Зменшити кількість">-</div>
 						<div class="count">1</div>
 						<div class="round-btn plus" data-tooltip="Збільшити кількість">+</div>
 					</div>
@@ -166,7 +192,7 @@
 					<div class="name">Печиво</div>
 					<input type="text" class="new-name">
 					<div class="btns-center">
-						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
+						<div class="round-btn minus disabled" data-tooltip="Зменшити кількість">-</div>
 						<div class="count">1</div>
 						<div class="round-btn plus" data-tooltip="Збільшити кількість">+</div>
 					</div>
@@ -179,7 +205,7 @@
 					<div class="name">Сир</div>
 					<input type="text" class="new-name">
 					<div class="btns-center">
-						<div class="round-btn minus" data-tooltip="Зменшити кількість">-</div>
+						<div class="round-btn minus disabled" data-tooltip="Зменшити кількість">-</div>
 						<div class="count">1</div>
 						<div class="round-btn plus" data-tooltip="Збільшити кількість">+</div>
 					</div>
