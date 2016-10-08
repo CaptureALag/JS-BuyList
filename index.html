@@ -35,9 +35,14 @@
 				height: "28px", 
 				"padding": "15px"
 			}, 500)
+
+			$('.list.to-buy').append(generateNewBadge(name))
 		}
 
 		function deleteItem(itemNode) {
+			console.log(getRelatedBadge(itemNode))
+			getRelatedBadge(itemNode).remove()
+
 			$(itemNode).animate({
 				height: "toggle", 
 				"padding": "0 15px"
@@ -54,6 +59,8 @@
 				var btnBuy = itemNode.find('.btn-buy')
 				var minusPlus = itemNode.find('.minus,.plus')
 				var btnRemove = itemNode.find('.btn-remove')
+				var badge = getRelatedBadge(itemNode);
+				console.log(badge)
 
 				if(btnBuy.html() == 'Куплено') {
 					btnBuy.html('Не куплено')
@@ -63,14 +70,26 @@
 						'pointer-events': 'none'
 					})
 					btnRemove.hide();
+				
+
+					badge.remove();
+					var boughtIndex = getRelatedBoughtBadgeIndex(itemNode)
+					if(!boughtIndex) {
+						$('.list.bought').prepend(badge)
+					} else {
+						console.log(boughtIndex, $('.list.bought > .list-item'))
+						$($('.list.bought > .list-item')[boughtIndex-1]).after(badge)
+					}
 				} else {
 					btnBuy.html('Куплено')	
 					btnBuy.attr('data-tooltip', 'Купити')
-					minusPlus.css({
-						opacity: 1,
-						'pointer-events': 'inherit'	
-					})
+					minusPlus.attr('style', '')
 					btnRemove.show()
+
+					badge.remove();
+					var toBuyIndex = getRelatedToBuyBadgeIndex(itemNode)
+					console.log(toBuyIndex)
+					$($('.list.to-buy > .list-item')[toBuyIndex-1]).after(badge)
 				}
 
 				btnBuy.blur()
@@ -85,15 +104,24 @@
 			var name = itemNode.find('.name')
 			var newNameInput = itemNode.find('.new-name')
 
+			if(!editMode && !newNameInput.val())
+				return;
+
 			name.toggle(!editMode)
 			newNameInput.toggle(editMode)
 
-			if(editMode) {
-				newNameInput.val(name.html())
-			} else {
-				name.html(newNameInput.val())
-			}
+			if(editMode)
+				newNameInput[0].focus()
+
+			newNameInput.val(name.html())
 		}
+
+		function updateItemName(itemNode) {
+			var name = itemNode.find('.name')
+			var newNameInput = itemNode.find('.new-name')
+			name.html(newNameInput.val())
+			getRelatedBadge(itemNode).find('.item-name').html(name.html())
+		}	
 
 		function changeItemCount(itemNode, delta) {
 			var countBlock = itemNode.find('.btns-center')
@@ -110,6 +138,7 @@
 				countBlock.animate({
 					opacity: 1
 				})
+
 			})
 		}
 
@@ -122,10 +151,38 @@
 			return newItem;
 		}
 
+		function generateNewBadge(name) {
+			var newBadge = $('#badge-example').clone()
+			newBadge.find('.item-name').html(name);
+			newBadge.show();
+			return newBadge;
+		}
+
 		function getItemList() {
 			return $('.main-block > .list')
 		}
 
+		function getRelatedToBuyBadgeIndex(itemNode) {
+			var toBuyIndex = $('.btn-remove:visible').closest('.list-item').index(itemNode);
+			return console.log('to-buy-index', toBuyIndex + 1), toBuyIndex + 1;
+		}
+
+		function getRelatedBoughtBadgeIndex(itemNode) {
+			var res = $('.btn-remove:not(:visible)[style]').closest('.list-item').index(itemNode);
+			return console.log('bought-index', res), res
+		}
+
+		function getRelatedBadge(itemNode) {
+			var toBuyIndex = getRelatedToBuyBadgeIndex(itemNode)
+
+			if(toBuyIndex != 0) {
+				return $($(".list.to-buy > .list-item")[toBuyIndex])
+			}
+			
+			var boughtIndex = getRelatedBoughtBadgeIndex(itemNode)
+
+			return $($(".list.bought > .list-item")[boughtIndex])
+		}
 
 
 		$(function() {
@@ -143,6 +200,9 @@
 			})
 			$('.main-block').on('click', '.name', function() {
 				toggleEditNameMode($(this).closest('.list-item'), true)	
+			})
+			$('.main-block').on('input', '.new-name', function() {
+				updateItemName($(this).closest('.list-item'))
 			})
 			$('.main-block').on('blur', '.new-name', function() {
 				toggleEditNameMode($(this).closest('.list-item'), false)	
@@ -218,7 +278,16 @@
 		</div>
 		<div class="block summary">
 			<h3>Залишилося</h3>
-			<div class="list">
+			<div class="list to-buy">
+				<div id="badge-example" class="list-item" style="display: none">
+					<div class="item-name">
+						Помідори
+					</div>
+					<div class="item-count">
+						1
+					</div>
+				</div>	
+
 				<div class="list-item">
 					<div class="item-name">
 						Помідори
@@ -245,7 +314,7 @@
 				</div>
 			</div>
 			<h3>Куплено</h3>
-			<div class="list">	
+			<div class="list bought">	
 			</div>	
 		</div>
 	</div>

@@ -80,6 +80,7 @@ button, .round-btn, [class^=btn-] {
 
 .container {
     width: 1100px;
+    min-width: 350px;
     margin: 100px auto;
     display: flex;
     align-items: flex-start;
@@ -291,6 +292,7 @@ button, .round-btn, [class^=btn-] {
     padding: 7px;
     border-radius: 5px;
     margin-bottom: 10px;
+    margin-left: 5px;
 }
 
 .summary > .list > .list-item > .item-name {
